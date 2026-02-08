@@ -1,0 +1,8 @@
+{
+  "name": "datasphere",
+  "version": "0.1.0",
+  "description": "SAP Datasphere plugin for data exploration, discovery, administration, connections, and data flow management. Connect to your SAP Datasphere tenant to explore spaces, browse the data catalog, inspect schemas, profile data quality, manage connections, and orchestrate data pipelines — all through natural language.",
+  "author": {
+    "name": "Datasphere Automations"
+  }
+}
