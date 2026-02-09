@@ -1,6 +1,6 @@
 # SAP Datasphere Plugin for Claude
 
-Connect Claude to your SAP Datasphere tenant for hands-free data exploration, modeling, integration, and management. This plugin includes 13 specialized skills covering every major Datasphere workflow — from browsing spaces and designing views to troubleshooting data flows and publishing data products. Powered by a production-grade MCP server with 45 tools, OAuth 2.0 authentication, and enterprise-level security including SQL sanitization and PII filtering.
+The most comprehensive SAP Datasphere plugin for Claude. 18 specialized skills covering every major Datasphere workflow — from data exploration and view design to BW Bridge migration, security architecture, CLI automation, and catalog governance. Powered by a production-grade MCP server with 45 tools, OAuth 2.0 authentication, and enterprise-level security including SQL sanitization and PII filtering.
 
 ## Skills
 
@@ -27,13 +27,28 @@ Connect Claude to your SAP Datasphere tenant for hands-free data exploration, mo
 | **datasphere-s4hana-import** | Import entities from SAP S/4HANA and BW/4HANA — CDS views, ODP extractors, Cloud Connector setup, and delta extraction |
 | **datasphere-connections** | Create and manage 35+ connection types including SAP S/4HANA, BigQuery, Redshift, Kafka, and generic JDBC/OData connectors |
 
+### Migration
+
+| Skill | Description |
+|-------|-------------|
+| **datasphere-bw-bridge-migration** | Migrate from BW/4HANA using Shell and Remote Conversion — ADSO modeling, Process Chain to Task Chain mapping, hybrid operation, and decommissioning |
+
+### Security
+
+| Skill | Description |
+|-------|-------------|
+| **datasphere-security-architect** | Design row-level security with Data Access Controls (DAC), import BW Analysis Authorizations, configure audit policies, and integrate Identity Providers (SAML/OIDC) |
+
 ### Administration & Governance
 
 | Skill | Description |
 |-------|-------------|
 | **datasphere-admin** | Space management, user and role administration, system monitoring, capacity planning, and transport operations |
+| **datasphere-cli-automator** | Automate administration via CLI — generate JSON payloads for bulk space/user/connection provisioning, manage certificates, and build CI/CD pipelines |
 | **datasphere-data-product-publisher** | Publish data products through the Data Sharing Cockpit — product descriptions, license terms, visibility settings, and marketplace management |
 | **datasphere-transport-manager** | Manage CSN/JSON transport packages — dependency checking, export/import workflows, conflict resolution, and Content Network integration |
+| **datasphere-business-content-activator** | Activate pre-built SAP Business Content packages — prerequisite checking (Time Dimensions, TCUR*), LSA++ alignment, and content update management |
+| **datasphere-catalog-steward** | Internal data governance — metadata enrichment, glossary term management, KPI definitions, tag taxonomies, and lineage-based impact analysis |
 
 ### Monitoring & Troubleshooting
 
@@ -80,14 +95,17 @@ After installation, configure your SAP Datasphere connection by setting the envi
 Once configured, just talk to Claude naturally:
 
 - *"What spaces do we have in Datasphere?"*
-- *"Show me the tables in the SALES space"*
-- *"Help me design a view for customer analytics"*
+- *"Help me design a star schema for customer analytics"*
 - *"Create an analytic model with revenue measures"*
 - *"Import CDS views from our S/4HANA system"*
+- *"Migrate our BW Process Chains to Task Chains"*
+- *"Set up row-level security on the sales data"*
+- *"Bulk-create 50 users via CLI"*
+- *"Activate the Automotive business content package"*
 - *"My replication flow is failing — help me diagnose"*
 - *"Optimize this slow-running view"*
 - *"Set up a transport package for production deployment"*
-- *"Publish our sales data as a data product"*
+- *"Enrich our catalog with business glossary terms"*
 - *"Generate SCD Type 2 logic for the customer dimension"*
 
 ## MCP Server

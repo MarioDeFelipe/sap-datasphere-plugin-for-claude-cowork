@@ -1,7 +1,7 @@
 {
   "name": "datasphere",
-  "version": "0.2.0",
-  "description": "SAP Datasphere plugin for data exploration, discovery, modeling, administration, integration, and governance. 13 specialized skills covering view design, analytic models, data flows, fuzzy matching, S/4HANA imports, performance optimization, troubleshooting, data products, and transport management — all through natural language. Powered by 45 MCP tools with enterprise-grade security.",
+  "version": "0.3.0",
+  "description": "The most comprehensive SAP Datasphere plugin for Claude. 18 specialized skills covering exploration, data modeling, integration, BW Bridge migration, security architecture, CLI automation, business content activation, catalog governance, performance optimization, and troubleshooting — all through natural language. Powered by 45 MCP tools with enterprise-grade security.",
   "author": {
     "name": "Datasphere Automations"
   },
