@@ -589,3 +589,9 @@ Returns execution time, rows processed, memory used, and state.
 - Consider future growth when sizing indexes and partitions
 - Balance optimization effort against business value
 - Regularly validate statistics and rebuild indexes
+
+## Reference Materials
+
+See reference files for detailed procedures:
+- `references/optimization-techniques.md` - Explain Plan reading guide, persistence decision matrix, partitioning strategies, memory management
+- `references/diagnostic-procedures.md` - Advanced diagnostic procedures: PlanViz trace generation/analysis, MDS query diagnosis for SAC live connections, HAR file network analysis, tenant memory/CPU profiling, and extracting underlying SQL from Datasphere views

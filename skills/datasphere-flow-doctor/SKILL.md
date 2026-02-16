@@ -1286,3 +1286,10 @@ execute_query(
 )
 ```
 
+## Reference Materials
+
+See reference files for detailed procedures:
+- `references/error-catalog.md` - Complete error code catalog with solutions
+- `references/abap-side-monitoring.md` - ABAP-side monitoring tools (DHCDCMON, DHRDBMON, SLG1) for diagnosing Replication Flow issues on the source S/4HANA system
+- `references/replication-flow-error-patterns.md` - 9 known Replication Flow error patterns with root causes, diagnostic steps, SAP Note references, and SAP support component assignments
+

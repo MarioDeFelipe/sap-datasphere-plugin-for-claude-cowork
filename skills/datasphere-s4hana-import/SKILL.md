@@ -753,6 +753,12 @@ test_connection(
 )
 ```
 
+## Reference Materials
+
+See reference files for detailed procedures:
+- `references/s4hana-integration-guide.md` - CDS views by functional area, ODP configuration, Cloud Connector and DP Agent setup
+- `references/cds-replication-architecture.md` - End-to-end architecture for CDS view replication (RMS, RDB, CDC Engine), setup checklist, CDS annotation requirements, and troubleshooting quick reference
+
 ## Next Steps
 
 1. **Gather prerequisites** using test_connection

@@ -191,3 +191,4 @@ For third-party data sources not directly supported:
 See reference files for detailed procedures:
 - `references/connection-types.md` - Detailed connection type configurations
 - `references/authentication.md` - Authentication setup guides
+- `references/troubleshooting-guide.md` - Cloud Connector path configuration, Data Provisioning Agent troubleshooting, CORS setup, CSN Exposure prerequisites, OData/ODBC diagnostics
