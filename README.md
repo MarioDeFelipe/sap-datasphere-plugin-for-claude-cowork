@@ -1,6 +1,6 @@
 # SAP Datasphere Plugin for Claude
 
-The most comprehensive SAP Datasphere plugin for Claude. 18 specialized skills covering every major Datasphere workflow — from data exploration and view design to BW Bridge migration, security architecture, CLI automation, and catalog governance. Powered by a production-grade MCP server with 45 tools, OAuth 2.0 authentication, and enterprise-level security including SQL sanitization and PII filtering.
+The most comprehensive SAP Datasphere plugin for Claude. 18 specialized skills, 30 reference files, and 31,000+ lines of expert content covering every major Datasphere workflow — from data exploration and view design to BW Bridge migration, security architecture, CLI automation, and catalog governance. Powered by a production-grade MCP server with 45 tools, OAuth 2.0 authentication, and enterprise-level security including SQL sanitization and PII filtering.
 
 ## Skills
 
@@ -56,6 +56,31 @@ The most comprehensive SAP Datasphere plugin for Claude. 18 specialized skills c
 |-------|-------------|
 | **datasphere-flow-doctor** | Diagnose and resolve errors in Data Flows, Replication Flows, and Transformation Flows — error catalogs, root cause analysis, and fix recommendations |
 | **datasphere-performance-optimizer** | Analyze and optimize performance — View Analyzer, Explain Plans, persistence strategies, partitioning, storage tiering, and query tuning |
+
+## Reference Library (30 files)
+
+Each skill includes detailed reference documentation for deep-dive guidance:
+
+| Skill | Reference Files |
+|-------|----------------|
+| **explorer** | exploration-workflows.md |
+| **view-architect** | view-modeling-guide.md |
+| **analytic-model-creator** | analytic-model-guide.md |
+| **intelligent-lookup** | intelligent-lookup-guide.md |
+| **data-flows** | data-flows.md, replication-flows.md, transformation-flows.md, task-chains.md |
+| **transformation-logic** | transformation-patterns.md |
+| **s4hana-import** | s4hana-integration-guide.md, cds-replication-architecture.md |
+| **connections** | authentication.md, connection-types.md, troubleshooting-guide.md |
+| **bw-bridge-migration** | bw-bridge-guide.md |
+| **security-architect** | security-patterns.md |
+| **admin** | space-management.md, system-monitoring.md, security-governance.md, transport.md |
+| **cli-automator** | cli-reference.md |
+| **data-product-publisher** | data-sharing-guide.md |
+| **transport-manager** | transport-operations.md |
+| **business-content-activator** | content-catalog.md |
+| **catalog-steward** | catalog-governance-guide.md |
+| **flow-doctor** | error-catalog.md, abap-side-monitoring.md, replication-flow-error-patterns.md |
+| **performance-optimizer** | optimization-techniques.md, diagnostic-procedures.md |
 
 ## Prerequisites
 
