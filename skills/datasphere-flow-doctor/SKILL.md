@@ -1289,7 +1289,11 @@ execute_query(
 ## Reference Materials
 
 See reference files for detailed procedures:
-- `references/error-catalog.md` - Complete error code catalog with solutions
-- `references/abap-side-monitoring.md` - ABAP-side monitoring tools (DHCDCMON, DHRDBMON, SLG1) for diagnosing Replication Flow issues on the source S/4HANA system
-- `references/replication-flow-error-patterns.md` - 9 known Replication Flow error patterns with root causes, diagnostic steps, SAP Note references, and SAP support component assignments
+- `references/error-catalog.md` — Complete error code catalog with solutions
+- `references/abap-side-monitoring.md` — ABAP-side monitoring for all Replication Flow paths: **CDC** (DHCDCMON, DHRDBMON, SLG1 objects), **SLT** (LTRC, LTRDBMON, `/1LT/IUC_*` SM37 jobs), and **ODP** (ODQMON, RSA9, CNV_NA_DI)
+- `references/replication-flow-error-patterns.md` — 13 known Replication Flow error patterns (CDS, SLT, ODP BW, ODP SAPI, data-conversion) with root causes, diagnostic steps, SAP Note references, and SAP support component assignments
+- `references/slt-replication-troubleshooting.md` — End-to-end troubleshooting for **SLT-based** (ABAP table) Replication Flows: DMIS version matrix, LTRC configuration, Cloud Connector resource list (DHAMB_/DHAPE_/LTAMB_/LTAPE_), SM37 `/1LT/IUC_*` jobs
+- `references/odp-replication-troubleshooting.md` — **ODP BW Context** and **ODP SAPI** troubleshooting: container names (`ODP_BW Extraction`, `ODP_SAPI - ODP Context: SAPI`), version prerequisites, RSA9/CNV_NA_DI workflow, SAPI object visibility fix
+- `references/load-type-scenarios.md` — Behavioural reference for Scenarios **A–F** (Initial Only / Initial+Delta × with/without TRUNCATE), **Change Types L/A/D**, and the "Delta Capture Off cannot be re-enabled" gotcha
+- `references/conversion-error-workaround.md` — JSON-export / type-override workaround for `error while converting string to decimal` (WKURS-style) column conversion failures
 

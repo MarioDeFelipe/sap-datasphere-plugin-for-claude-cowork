@@ -105,3 +105,34 @@
 ### Notes
 - Requires JDBC driver upload to Data Provisioning Agent
 - For on-premise sources only
+
+---
+
+## Cloud Connector Resource List for ABAP-based Replication Flows
+
+Replication Flows browse and subscribe to ABAP source objects through SAP Cloud Connector. The resource list under **Cloud To On-Premise → Access Control** must expose specific prefixes — without them, browsing Source Container / Source Objects fails in the Datasphere modeler, often with an unhelpful generic error.
+
+| Source system type | Required resources |
+|--------------------|--------------------|
+| **SAP S/4HANA on-premise** (including embedded SLT) | `DHAMB_` (prefix), `DHAPE_` (prefix), `RFC_FUNCTION_SEARCH` (exact name) |
+| **ABAP system with DMIS add-on** (standalone SLT) | `LTAMB_` (prefix), `LTAPE_` (prefix), `RFC_FUNCTION_SEARCH` (exact name) |
+
+Additional BAPIs invoked during browse (visible in `ST05` trace on the source):
+- `DDIF_FIELDINFO_GET`
+- `RFC_GET_FUNCTION_INTERFACE`
+- `DHAMB_*` / `DHAPE_*` (S/4HANA) or `LTAMB_*` / `LTAPE_*` (DMIS)
+
+**Verification**: click the first button on the resource-list row in Cloud Connector to ping the resource.
+
+**Connection validation** on the Datasphere side must read **"Replication flows are enabled"** before the connection can be used in a Replication Flow.
+
+### Troubleshooting references
+
+| Issue | Reference |
+|-------|-----------|
+| Validation errors / Cloud Connector errors | **KBA 3369433** — Cloud Connector troubleshooting for Datasphere connections |
+| Resource-list / access-control issues | **KBA 3456850** |
+| Data collection for support ticket | **KBA 3449529** (component **DS-DI-CON**) |
+| Source objects not visible in container | **KBA 3501459** — communication user authorization |
+
+For the full remote-user authorization model (required standard roles + authorization objects), see `datasphere-security-architect/references/abap-remote-user-authorizations.md`.

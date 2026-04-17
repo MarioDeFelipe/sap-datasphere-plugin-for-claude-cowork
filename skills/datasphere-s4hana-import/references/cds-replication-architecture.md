@@ -1,6 +1,19 @@
 # CDS View Replication Architecture: S/4HANA On-Premise to Datasphere
 
-## End-to-End Architecture
+> **Scope**: This reference covers the **CDS view** path specifically. For **SLT-based** (ABAP table) replication see `datasphere-flow-doctor/references/slt-replication-troubleshooting.md`. For **ODP / BW context** or **ODP / SAPI** see `datasphere-flow-doctor/references/odp-replication-troubleshooting.md`.
+
+## Replication-Flow Source Paths at a Glance
+
+A Replication Flow from a SAP ABAP-based system uses **one of four** extraction paths, each with its own source container and monitoring transactions:
+
+| Path | Container | DMIS requirement | Delta mechanism |
+|------|-----------|------------------|-----------------|
+| **CDS views** (this doc) | `CDS_EXTRACTION` | n/a (S/4HANA) | CDC engine (DHCDCMON) |
+| **SLT** (ABAP tables) | `/SLT/<MTID>` | **DMIS 2018 SP06+** or **DMIS 2020 SP03+** | SLT triggers → logging tables |
+| **ODP / BW** | `ODP_BW Extraction` | BW **7.55+** or S/4HANA **1909+** | ODQ (ODP subscriber) |
+| **ODP / SAPI** | `ODP_SAPI - ODP Context: SAPI` | DMIS **2011 SP23 / 2018 SP08 / 2020 SP04+** | ODQ (ODP subscriber) |
+
+## End-to-End Architecture (CDS path)
 
 ### Datasphere Side (Target)
 - Replication Flow UI/Services/Repository
@@ -20,6 +33,8 @@
 
 1. **Initial Only**: CDS View → RDB Buffer Tables → (Cloud Connector) → RMS → Local Table in Datasphere
 2. **Initial and Delta**: CDS View → CDC Engine → Master Logging Table → Subscriber Logging Table → RDB Buffer → (Cloud Connector) → RMS → Local Table
+
+> **Correction note** — earlier versions of this summary described the Initial-Only path as "Source table → RDB Buffer (direct)" without clarifying that this applies to the **CDS view** path. By the way, for **SLT** the path is different (source table → SLT triggers → logging tables → RDB); and for **ODP** the path is source → ODQ → RMS (no DHCDC/DHRDB on the source side). Use the matrix above to pick the right diagnostic chain.
 
 ## CDS View Requirements
 
