@@ -412,11 +412,87 @@ Beyond the primary CDC and RDB transactions, several other tools provide complem
 | Transaction | Component | Primary Use | Key Actions |
 |---|---|---|---|
 | DHCDCMON | CDC Engine | Monitor change capture | Check job status, review logging tables, reschedule jobs |
-| DHRDBMON | RDB Buffer | Monitor data staging | Check package status, review buffer capacity |
-| SLG1 | Logs | Find error details | Query by time range and object code |
+| DHRDBMON | RDB Buffer (**S/4HANA**) | Monitor data staging on embedded scenarios | Check package status, review buffer capacity |
+| LTRDBMON | RDB Buffer (**DMIS / standalone SLT**) | Monitor data staging on DMIS-based SLT systems | Same as DHRDBMON; use this when source is DMIS |
+| LTRC | SAP LT Replication Server | Monitor & configure SLT-based replication | Participating Objects, Application Logs, Statistics, Expert Functions |
+| SLG1 | Logs | Find error details | Query by time range; objects: DHAPE, DHCDC, DHADM, DHAMB, DHBAS, DHODP, DHRDB, **ODQ** (BW/SAPI) |
 | SDDLAR | CDS Metadata | Validate view definition | Display source, check syntax, preview data |
-| RODPS_REPL_TEST | CDC Testing | Test outside Datasphere | Confirm CDC engine capability |
-| ODQMON | ODP Queue | Monitor queue status | Check extraction count and queue depth |
-| SM37 | Jobs | Monitor background jobs | Check Observer/Transfer job logs |
-| SU53 | Authorization | Check failed permissions | Identify missing authorizations |
+| RODPS_REPL_TEST | CDC/ODP Testing | Test outside Datasphere | Confirm CDS or ODP extraction capability |
+| ODQMON | ODP Queue | Monitor queue status (BW & SAPI contexts) | Check extraction count and queue depth |
+| RSA9 | Application Component Hierarchy | Make SAPI DataSources visible to RF container | Answer "Yes" to Transfer Component Hierarchy |
+| CNV_NA_DI | DMIS Note Analyzer | Verify required notes are applied on source | From SAP Note 3016862; scenario-specific |
+| SM37 | Jobs | Monitor background jobs | Check CDS Observer/Transfer and SLT `/1LT/IUC_*` jobs |
+| SM59 | RFC Destinations | Validate RFC type 3 from SLT to source | "Connection Test" button |
+| SU01 | User Admin | Create/maintain communication user | Assign roles + profile |
+| SU53 | Authorization | Check failed permissions | Identify missing authorization objects |
 | STAUTHTRACE | Authorization | Trace permission checks | Debug authorization failures |
+| PFCG | Role maintenance | Build custom roles from standard templates | Create ZCUS_DI_ABAP_REMOTE / _USER |
+| SJOBREPO_STEPUSER | Step user maintenance | Fix `/LTB/JOB_DISPATCHER` stuck jobs | Grant SAP_ALL to step user (S_DMIS dependency) |
+
+---
+
+## LTRC (SAP LT Replication Server Configuration / Monitor)
+
+Use `LTRC` on the **SLT system** to monitor SLT-based Replication Flows (ABAP table replication). Not used for CDS / ODP scenarios.
+
+**Participating Objects tab**
+- Tables appear here only **after** the Datasphere Replication Flow pipeline has started subscribing.
+- Lists each replicated table with status for Initial Only / Initial+Delta.
+
+**Application Logs tab**
+- Activation logs and per-object runtime errors.
+- First place to look when the Datasphere Data Integration Monitor says there is an error but gives no detail.
+
+**Statistics tab**
+- Row counts, throughput, and timing per object.
+
+**Key configuration values (for incident triage)**
+- Scenario must be **"Other → SAP Data Intelligence (Replication Management Service)"**.
+- Replication Option must be **Real Time**.
+- The **Mass Transfer ID (MTID)** is required as the source container in Datasphere, using path `/SLT/<MTID>`.
+
+---
+
+## LTRDBMON (RDB Buffer Monitor on DMIS systems)
+
+Functionally equivalent to `DHRDBMON` but **runs on DMIS-based (standalone SLT) systems**. Use this transaction to inspect RDB buffer tables when the source is a DMIS add-on rather than embedded S/4HANA.
+
+> **Correction note** — earlier versions of this reference described `DHRDBMON` as the universal RDB monitor. By the way, that was incomplete. **Use `LTRDBMON` on DMIS systems and `DHRDBMON` on S/4HANA** (including embedded SLT scenarios).
+
+Key things to check (same semantics as `DHRDBMON`):
+- Buffer table status (empty / filling / full).
+- Package state (NEW / READY / COMMITTED).
+- Records **not yet assigned** to a package — if this is high, RMS is not keeping up.
+
+---
+
+## SM37 — SLT Job Names
+
+For **CDS-view-based replication** the CDC jobs are `/1DH/OBSERVE_LOGTAB` (observer) and `/1DH/PUSH_CDS_DELTA` (transfer).
+
+For **SLT-based (ABAP table) replication** the jobs are different — each extraction step has its own SLT job, keyed by MTID:
+
+| Job pattern | Role |
+|-------------|------|
+| `/1LT/IUC_REP_CNTR_<MTID>` | **Master Controller** — creates DB triggers and logging tables |
+| `/1LT/IUC_DEF_COBJ_<MTID>` | **Migration Object Definition** — defines the migration object for a specific table |
+| `/1LT/IUC_CALC_<MTID>_nn` | **Access Plan Calculation** — partitioning plan for initial load |
+| `/1LT/IUC_LOAD_MT_<MTID>_nnn` | **Data Load** — executes initial load and delta replication |
+
+When a Replication Flow with `Initial and Delta` is `Active`, `/1LT/IUC_LOAD_MT_<MTID>_nnn` also stays `Active` in SM37 — that is expected behaviour (**SAP Note 3481365**).
+
+---
+
+## SLG1 Object Cheat-Sheet
+
+When drilling SLG1 for Replication Flow runtime errors, pick the right Object (first column below) depending on the scenario:
+
+| Scenario | SLG1 Object |
+|----------|-------------|
+| CDS view replication (initial + CDC engine) | `DHAPE`, `DHCDC` |
+| Generic metadata / admin | `DHADM`, `DHAMB`, `DHBAS` |
+| ODP usage (BW context and SAPI context) | **`ODQ`** |
+| RDB buffer issues | `DHRDB` (S/4HANA) |
+| SLT / DMIS scenarios | Use `LTRC` Application Logs rather than SLG1 when possible; SLG1 object is `DHBAS` / `DHAPE` if set up through DHAPE pipeline |
+
+For the full SLG1 object list see the list in the Troubleshooting sections earlier in this document.

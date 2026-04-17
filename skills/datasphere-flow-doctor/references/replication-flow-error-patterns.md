@@ -144,24 +144,104 @@ Backend ABAP processing is blocked — jobs stuck, locks, or resource exhaustion
 3. Check ST22 for ABAP short dumps related to /1DH/ programs
 4. Verify no system-wide issues (SM21 system log, ST06 OS monitor)
 
+## Error Pattern 10: Fatal "Aborting the graph" on an ODP source
+### Symptoms
+- `An error occurred. Replication runs will restart on <date> at <time>. Error: Fatal error found. Aborting the graph.`
+- `An error occurred. Replication runs are retrying. Error: Fatal error found. Aborting the graph.`
+- Seen on Replication Flows over **ODP BW Context** or **ODP SAPI**
+
+### Root Cause
+Required SAP Notes from the central ABAP-Integration stack (**SAP Note 2890171**) are missing on the source. The ODP API for Gen2/RMS must be current on the source.
+
+### Resolution
+1. Install the **DMIS Note Analyzer** (**SAP Note 3016862**) on the source.
+2. Run transaction **`CNV_NA_DI`** to list missing notes for the relevant scenario.
+3. Apply missing notes per the source product:
+   - S/4HANA 2022 collective: **3225712**
+   - S/4HANA 2021 TCI: **3232522**
+   - S/4HANA 2020 TCI: **3232559**
+   - S/4HANA 1909 TCI: **3234938** (+ **2830276**)
+   - DMIS 2011 SP23 / 2018 SP08 / 2020 SP04: **3156672 / 3156649**
+4. Also apply **SAP Note 3412110** — improvements for the replication and initial load of ODP data sources.
+5. Re-validate connection (must still read "Replication flows are enabled").
+
+See also `odp-replication-troubleshooting.md`.
+
+## Error Pattern 11: ODP SAPI Source Object not visible in container
+### Symptoms
+- Source Container `ODP_SAPI - ODP Context: SAPI` opens but extractor/DataSource is not listed.
+
+### Root Cause
+- Either the DataSource has not been released for ODP in the source, or the Application Component Hierarchy has not been transferred.
+
+### Resolution
+1. Confirm the DataSource is released for ODP per **SAP Note 2232584**.
+2. Follow **KBA 3489773** (ODP SAPI Source does not appear in SAP Datasphere for Replication Flows).
+3. On the source, run transaction **`RSA9`** and answer **Yes** to the popup "Do you want the content application Transfer Component Hierarchy?". Background: **KBA 2205577**.
+4. Verify the remote user has the authorizations required by **SAP Note 3100673** — specifically `S_DHAMBSAP` (or `S_LTAMBSAP` on DMIS) for SAPI context.
+
+## Error Pattern 12: SLT — Objects not visible under SLT container
+### Symptoms
+- Source Container `/SLT/<MTID>` lists no objects even though the Mass Transfer ID exists in `LTRC`.
+
+### Root Cause
+Communication user lacks authorizations for the SLT Connector or for ABAP Metadata Browser resources.
+
+### Resolution
+1. Check **KBA 3501459** — communication user authorizations for Replication Flow object visibility.
+2. Ensure the remote user has role **`SAP_IUUC_REPL_REMOTE`** (plus `SAP_DH_CDC_REMOTE` for S/4HANA 2020+).
+3. In Cloud Connector, confirm the resource list exposes `LTAMB_` / `LTAPE_` (DMIS) or `DHAMB_` / `DHAPE_` (S/4HANA) plus `RFC_FUNCTION_SEARCH`.
+4. Run **`SU53`** on the source immediately after a failed browse attempt and check for missing `S_DMC_S_R` / `S_DMIS` (SLT) or `S_DHAMBSLT` / `S_LTAMBSLT` (ABAP Metadata Browser for SLT MTIDs).
+
+## Error Pattern 13: Source conversion error — `string to decimal` / `columns=[WKURS]`
+### Symptoms
+- Initial load fails: `data could not be converted (keys: ..., columns: ...) reason=[<COL>:error while converting string to decimal]`
+
+### Root Cause
+Source column contains non-numeric bytes for specific rows (spaces, locale-formatted values, stray characters) that the target decimal type cannot accept.
+
+### Resolution
+Use the JSON-export / type-override workaround documented in `conversion-error-workaround.md`:
+1. Clone target with failing column retyped to `string(100)` and renamed (e.g. `WKURS` → `WKURS_STR`).
+2. Create a test RF, save without deploy, **export** JSON.
+3. Edit JSON: set the source column's `vtype-ID` from `$DYNAMIC.decimal_*` to `$DYNAMIC.string_N`.
+4. Import JSON, map `WKURS → WKURS_STR`, deploy, run.
+5. In Data Viewer, filter out rows starting with digits `0-9` (and `-0` to `-9` for negative) to reveal the bad values.
+
 ## Component Ownership for SAP Support Cases
 When opening an SAP support case, use these component assignments:
-- RODPS_REPL_TEST returns error → Component: BW-WHM-DBA-ODA
-- DHCDCMON Application Log shows "ACP daemon not start" → Component: BC-DB-CDC
-- CDS extraction stuck → Check both BC-DB-CDC and DS-INT-RF (Datasphere Integration - Replication Flows)
-- Cloud Connector issues → Component: BC-MID-SCC
-- Datasphere-side pipeline issues → Component: DS-INT-RF
+- RODPS_REPL_TEST returns error (BW) → Component: **BW-WHM-DBA-ODA**
+- DHCDCMON Application Log shows "ACP daemon not start" (CDS CDC) → Component: **BC-DB-CDC**
+- CDS extraction stuck → Check both **BC-DB-CDC** and **DS-DI-RF** (Datasphere Integration - Replication Flows)
+- Cloud Connector issues / connection validation errors → Component: **DS-DI-CON** (and **BC-MID-SCC** if the Cloud Connector itself is faulty)
+- Datasphere-side pipeline / runtime issues → Component: **DS-DI-RF**
 
 ## Key SAP Notes Quick Reference
 | SAP Note | Description |
 |----------|-------------|
-| 2890171 | ABAP Integration - CDS view requirements for Replication Flows |
+| 2890171 | ABAP Integration - central note, CDS view requirements |
+| 3297105 | Considerations & limitations for Replication Flows |
 | 3100673 | ABAP Integration - Security Settings |
+| 3016862 | DMIS Note Analyzer (transaction `CNV_NA_DI`) |
+| 3498095 | How to use the Note Analyzer |
 | 3397020 | "Cannot determine tables for CDS view" resolution |
 | 3465112 | "Partitioning for Object failed" random failures |
 | 3669170 | How to improve replication performance - ABAP CDC Engine |
-| 3223735 | SAP Data Intelligence - Transfer job tuning (DHCDC_JOBSTG) |
+| 3223735 | Transfer job tuning (DHCDC_JOBSTG) |
 | 3369433 | Cloud Connector troubleshooting for Datasphere connections |
+| 3456850 | Cloud Connector resource-list issues |
+| 3449529 | Data collection for DS-DI-CON incidents |
 | 3365864 | Where does information in DHCDCMON come from? |
 | 2930269 | ABAP CDS CDC common issues and troubleshooting |
 | 3476918 | How to access HANA Cloud DB traces |
+| 3412110 | ABAP Integration - improvements for ODP initial load + delta |
+| 2232584 | Release of SAP extractors for ODP replication (SAPI) |
+| 3489773 | ODP SAPI Source does not appear in Datasphere |
+| 2205577 | Application component does not exist in RSA5: Error R8418 |
+| 3486245 | FAQ: RFC Fast Serialization in Replication Flow |
+| 3339368 | FAQ: Push DataSource Delta Extraction via ODP/SAPI |
+| 3481365 | Initial and Delta RF: data-load job remains Active |
+| 3501459 | Communication user authorization - RF object visibility |
+| 3360905 | RMS / Replication Flow performance |
+| 3489681 | Low performance with Datasphere local tables as RF target |
+| 2855052 | Authorizations required for ODP Data Replication API 2.0 |

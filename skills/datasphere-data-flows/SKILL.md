@@ -353,12 +353,16 @@ Task Chains can trigger remote process chains in SAP BW Bridge, though Bridge ch
 
 ### SAP S/4HANA Integration
 
-**Preferred Method:** CDS Views via ABAP connection (using Cloud Connector)
+**Preferred Method depends on the source object type:** CDS Views for CDS sources; SLT for ABAP tables.
 
 | Method | When to Use |
 |--------|-------------|
-| CDS Views | Preferred - semantic richness, CDC support |
-| SLT (Trigger-based) | Legacy - supported but CDS preferred |
+| CDS Views (via S/4HANA or ABAP connection) | Preferred for **CDS view** sources — semantic richness, CDC support |
+| SLT (Trigger-based, via SAP LT Replication Server) | **Recommended for ABAP table** sources — requires DMIS 2018 SP06+ or DMIS 2020 SP03+ |
+| ODP (BW context) | For **BW objects** (ADSO, InfoCube, Composite Provider, Query) — BW 7.55+ / S/4HANA 1909+ |
+| ODP (SAPI context) | For **SAP standard extractors/DataSources** released for ODP (Note 2232584) |
+
+> **Correction note** — earlier versions of this document described SLT as "Legacy". By the way, that was incorrect. SLT is **not deprecated** for Replication Flows; it is the **recommended** approach for table-based (ABAP table) replication. The legacy option to avoid is **SLT 2.0 (DMIS 2011)** — that specific add-on is no longer updated and is not recommended. See `references/replication-flows.md` and `datasphere-flow-doctor/references/slt-replication-troubleshooting.md`.
 
 ### Object Store (HANA Data Lake Files)
 

@@ -1601,4 +1601,9 @@ Response: "These 12 tables have audit logging:
 
 ---
 
+## Reference Materials
+
+- `references/security-patterns.md` — Data Access Controls (DAC), BW authorization migration, identity provider configuration
+- `references/abap-remote-user-authorizations.md` — **Source-side ABAP user** authorizations for Replication Flows per SAP Security Note 3100673: required standard roles (`SAP_DI_ABAP_REMOTE`, `SAP_DI_ABAP_USER`, `SAP_IUUC_REPL_REMOTE`, `SAP_DH_CDC_REMOTE`), authorization-object matrix (S/4HANA vs DMIS), PFCG/SU01 setup flow, and the `NO_AUTHORIZATION` / SU53 diagnostic workflow
+
 End of SKILL.md
