@@ -192,3 +192,9 @@ See reference files for detailed procedures:
 - `references/connection-types.md` - Detailed connection type configurations
 - `references/authentication.md` - Authentication setup guides
 - `references/troubleshooting-guide.md` - Cloud Connector path configuration, Data Provisioning Agent troubleshooting, CORS setup, CSN Exposure prerequisites, OData/ODBC diagnostics
+
+## What's New (2026.10)
+
+- **SAP ECC connections** — ECC is now a first-class source connection type for **Replication Flows**, exposed through the **Operational Data Provisioning (ODP)** framework. Use this to lift CDS-extractor-style data out of legacy ECC systems into Datasphere without an SLT detour for many use cases. Help link: SAP ECC Connections (`e546ccd61af54bf49a0f531a43fe0961.html`).
+- **SAP BW connections** — BW is now also supported as a source for **Replication Flows** via ODP. This complements the existing BW Bridge path for migrations: when you need BW data in Datasphere but don't want to migrate the BW system, an ODP-based Replication Flow is now the simpler choice. Help link: SAP BW Connections (`e589041e80264f43b6c209c407336376.html`).
+- **Recommendation**: when a customer asks "How do I get BW or ECC data into Datasphere?" the decision tree now is — Replication Flow (ODP) → for ongoing replication; BW Bridge → only when you need to lift-and-shift legacy BW logic; SLT → for ABAP-table-level CDC. See `datasphere-data-flows` and `datasphere-bw-bridge-migration` for the full decision matrix.

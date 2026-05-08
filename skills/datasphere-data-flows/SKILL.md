@@ -458,3 +458,14 @@ See reference files for detailed procedures:
 
 - **Improved Primary Key Order Handling in Replication Flows**: During table replication, the primary key order from the source is now preserved in the target. This prevents replication failures caused by key order mismatches between source and target tables. No configuration needed — this is automatic behavior.
 - **Output Parameters in Task Chains**: Task chain objects now support output parameters. You can map output parameters from task objects to the parent task chain, enabling more flexible orchestration of nested task chains and conditional logic based on task results.
+
+## What's New (2026.10)
+
+- **Replication Flow `Delta Load Run` setting** — new value **"At Scheduled Time"** alongside the existing **"On Delta Interval"**.
+  - *On Delta Interval* (default): RF runs as a long-running task and continuously polls for delta records based on `Delta Load Frequency`.
+  - *At Scheduled Time*: RF processes the available delta records and **completes** after each run. Use this when you want to trigger the RF manually, run it on a schedule, or include it inside a Task Chain.
+  - Set under **Run Settings** in the RF; requires the **DW Integrator** role to edit.
+  - **Cost angle**: RF billing is by job duration, not data volume — switching delta-enabled RFs from continuous polling to scheduled runs can materially reduce cost where business users only need refreshed data N times a day.
+- **SAP ECC and SAP BW are now supported as Replication Flow sources** via the **Operational Data Provisioning (ODP)** framework. Previously only S/4HANA, BW/4HANA, SuccessFactors, and a handful of cloud sources were supported. Use ECC connections for legacy ERPs that aren't yet on S/4 and use BW connections to lift InfoProviders out of legacy BW landscapes without a Bridge.
+- **Task Chain → Data Flow step "Enable Checkup"** — new flag on a Data Flow step inside a Task Chain. When ON, the Data Flow generates a detailed **health analysis log** that's primarily designed for SAP support to diagnose run errors. Turn it on temporarily when a Data Flow inside a Task Chain misbehaves intermittently and you've already captured the basic logs; turn it back off once you're done because it adds runtime overhead.
+- **Bulk schedule owner assignment for Task Chains** — admin task: you can now reassign the schedule owner across many task chains at once (useful when a person leaves the team and dozens of nightly jobs need a new owner). See `datasphere-admin` skill for the operational steps.

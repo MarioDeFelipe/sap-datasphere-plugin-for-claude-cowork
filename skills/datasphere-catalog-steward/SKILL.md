@@ -1341,3 +1341,10 @@ Before publishing a data product, use Catalog Steward to:
    - Monitor governance compliance (tagging, quality, ownership)
    - Conduct quarterly reviews; adjust policies based on feedback
    - Celebrate wins; recognize teams driving adoption
+
+## What's New (2026.10)
+
+- **Natural Language Search across assets, terms, and KPIs** — the Catalog now translates natural language prompts into asset queries. Instead of teaching users a filter UI ("Domain = Finance, Type = KPI, Tag includes 'liquidity'"), encourage them to ask the catalog in plain language ("show me KPIs related to liquidity in finance"). Two governance implications worth flagging proactively:
+  1. **Glossary terms become anchor points** — well-curated business terms make NL search work better. Audit your glossary coverage of high-traffic concepts.
+  2. **Object descriptions matter more, not less** — NL search uses asset descriptions and labels as semantic context. Empty/auto-generated descriptions hurt discoverability. Use this rollout as the moment to push curators to backfill descriptions for the top-N consumed assets.
+- **Recommend** keeping the NL search enabled by default but auditing miss-matches monthly: assets that users keep asking for but the NL search doesn't surface tell you exactly which descriptions/tags need work.

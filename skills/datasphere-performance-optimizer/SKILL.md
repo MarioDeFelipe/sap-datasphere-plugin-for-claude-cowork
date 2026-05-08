@@ -595,3 +595,12 @@ Returns execution time, rows processed, memory used, and state.
 See reference files for detailed procedures:
 - `references/optimization-techniques.md` - Explain Plan reading guide, persistence decision matrix, partitioning strategies, memory management
 - `references/diagnostic-procedures.md` - Advanced diagnostic procedures: PlanViz trace generation/analysis, MDS query diagnosis for SAC live connections, HAR file network analysis, tenant memory/CPU profiling, and extracting underlying SQL from Datasphere views
+
+## What's New (2026.10)
+
+- **Runtime Metrics on the Lineage Graph for Views** — the Runtime Metrics tool now overlays performance metrics on each node of a view's lineage graph, including the underlying source objects. When diagnosing a slow view:
+  1. Open the view → **Runtime Metrics** → **Lineage**.
+  2. Read the metrics per node down the chain. The first node from the top whose runtime balloons disproportionately is your bottleneck.
+  3. Cross-check with the existing **Explain Plan** for that node — lineage tells you *where*, the plan tells you *why*.
+  This makes it much easier to prove that the issue is upstream (a remote table or a federated SQL view) rather than in the consuming view's own logic, which is the most common false accusation in a performance review meeting.
+- **Pair this with $metadata variable inspection (2026.10 OData change):** when a consuming app reports slow refresh, check whether the variables/filters it's passing are actually being pushed down to the source. If `$metadata` says a variable maps to a source filter but the lineage runtime metrics still show full-source scans, the federation isn't pushing down — that's a configuration problem, not a query problem.

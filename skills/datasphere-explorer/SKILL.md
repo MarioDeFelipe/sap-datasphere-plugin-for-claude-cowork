@@ -184,3 +184,8 @@ a business analyst, a data scientist, or a manager trying to understand what dat
 ## What's New (2026.05)
 
 - **Filter on Aggregated Measure Values in OData API**: When querying analytic models via OData, you can now filter on aggregated measure values. Example: `?$filter=Partner_ID eq '100000005' and Value gt 1000000`. This is useful when exploring data programmatically or building consumption queries — you can request only rows where measures exceed specific thresholds.
+
+## What's New (2026.10)
+
+- **OData `$metadata` now exposes variables and filter definitions** for relational assets. Request `GET https://<tenant>/api/v1/datasphere/consumption/relational/<space>/<asset>/$metadata` and you can now read the asset's input parameters/variables (name, type, default, multi-value flag) and filter capability annotations directly — no more guessing or scraping the UI. When exploring an asset for a downstream client, prefer this over column-only inspection so you can show the user every dimension they're allowed to filter on. Keep in mind the older path `/api/v1/dwc/consumption/...` is **deprecated** — use `/api/v1/datasphere/consumption/...` everywhere.
+- **Natural Language Search in the Catalog**: users can now ask the catalog questions like "show me KPIs about gross margin in EMEA" instead of building filter combinations. When helping a user discover assets, suggest NL phrasing first and fall back to structured `search_catalog` filters only when the NL search misses (e.g., very technical IDs or wildcard patterns).

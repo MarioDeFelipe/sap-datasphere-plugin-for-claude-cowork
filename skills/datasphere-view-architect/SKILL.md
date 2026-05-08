@@ -425,3 +425,14 @@ Use to test calculated column expressions, filters, and join logic
 - **Partitioning Local Tables for Intelligent Applications**: If your Datasphere is part of an SAP Business Data Cloud formation, you can now create partitions for local tables installed via intelligent applications. This enables better management of read-only tables with large data volumes by breaking data into chunks.
 - **Change Primary Key Index Type in Local Tables**: When a local table has multiple primary keys, you can now change the index type in the Local Table editor. This optimizes performance in very large volume scenarios where the default index type may not be optimal.
 - **Review and Restore Transformation Flow Versions**: You can now review past versions of transformation flows, open them in read-only mode, download them as CSN/JSON files, and restore a past version to replace the current version. This provides version history and rollback capability for transformation logic.
+
+## What's New (2026.10)
+
+- **OData `$metadata` for views now exposes Input Parameters**. When you create a view with **Expose for Consumption** ON and one or more **Input Parameters**, calling `GET /api/v1/datasphere/consumption/relational/<space>/<view>/$metadata` now returns the parameter definitions (name, type, default, multi-value flag) declaratively. This means downstream apps no longer need to be hard-coded against your view — they can introspect it. Two practical implications when designing a view:
+  1. **Name input parameters thoughtfully** — the parameter name is what end users will see in dynamically-generated UIs; treat it as a public contract.
+  2. **Set sensible defaults** — they're returned by `$metadata` and used when the consumer omits the parameter.
+- **Consumption URL pattern recap** for a view with parameters:
+  ```
+  GET https://<tenant>/api/v1/datasphere/consumption/relational/<space>/<view>/<view>(P_Region='US')/Set?$top=100
+  ```
+  Use the `(<param>=<val>)/Set` segment for required parameters, and OData query params (`$select`, `$filter`, `$top`, `$skip`, `$orderby`) for projection and pagination. The deprecated `/api/v1/dwc/consumption/...` form should not be used.

@@ -286,3 +286,12 @@ See reference files for detailed procedures:
 
 - **Critical Storage Threshold — Automatic Space Locking**: To protect tenant stability, Datasphere will now automatically lock ALL spaces when disk usage reaches a critical threshold. A message appears in the Space Management app and on each space page. To unlock and resume work, you must either increase tenant disk storage or delete unneeded data. This is a critical operational consideration — monitor disk usage proactively and set up alerts before reaching the threshold.
 - **Installing Intelligent Applications for Multiple Source Systems**: If your Datasphere is part of a Business Data Cloud formation, you can now install a single intelligent application multiple times for different source systems. Each source system creates (or reuses) its own ingestion space, with source-specific preparation and application spaces identified by an alias.
+
+## What's New (2026.10)
+
+- **Bulk schedule owner reassignment for Task Chains** — you can now assign a single owner to multiple scheduled task chains at once, instead of editing each chain's schedule individually. Use this when:
+  - Someone leaves the team and you need to reparent dozens of nightly jobs.
+  - You want to consolidate operational responsibility under a single service account.
+  - You're handing operations from a build team to a run team after go-live.
+  Help link: "Modify the Owner of a Schedule" (`4b660c0395454bd0923f732eef4ee4b2.html`).
+- **OData consumption URL reminder**: the legacy prefix `/api/v1/dwc/consumption/` is **deprecated** and will be discontinued in a future release. Audit any homegrown integrations (curl scripts, Postman collections, third-party connectors) and migrate to `/api/v1/datasphere/consumption/...`. The path otherwise is identical.

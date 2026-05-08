@@ -691,3 +691,15 @@ Verify data types and column names
 
 - **Share Analytic Models Across Spaces**: You can now share an analytic model to one or more other spaces. In the target space, you can create a new analytic model on top of the shared one for space-specific consumption. This enables a hub-and-spoke pattern where a central analytics team maintains core models and business units layer their own measures and dimensions on top.
 - **Filter on Aggregated Measure Values in OData API**: When consuming analytic models via OData, you can now filter on aggregated measure values. Example syntax: `?$filter=Partner_ID eq '100000005' and Value gt 1000000`. This enables consumers to request only rows where measures meet specific thresholds, reducing data transfer and improving dashboard performance.
+
+## What's New (2026.10)
+
+- **AM-on-AM variable inheritance** — when an analytic model uses **another analytic model** as its source, the consuming AM can now:
+  - **Rename** inherited variables (so the SAC/consumer name is independent of the source name)
+  - **Override default values**
+  - **Use the inherited variables in restricted measures and calculations** of the consuming AM (previously they were essentially passthrough)
+  This unlocks the hub-and-spoke pattern: a central team owns a core AM with canonical variables (`P_FiscalYear`, `P_Currency`), and downstream domains layer thin AMs that rename/repurpose those variables for their dashboards without duplicating logic.
+- **OData consumption: variables now declarative in `$metadata`**. Calling `GET /api/v1/datasphere/consumption/analytical/<space>/<asset>/$metadata` returns the asset's variables, defaults, and accepted operators. Builders of dynamic UIs (SAP Build, Fiori Elements, custom apps) can drive their input prompts from `$metadata` instead of hard-coding them. When designing a new AM, name variables and set defaults with this in mind — the names will surface in third-party tools.
+- **`(<param>=<val>)/Set` syntax recap** for passing variables in OData URLs:
+  - Single value: `Sales(Region='US')/Set`
+  - Multi-value (use the operator inside the quoted expression): `Sales(Region='in "US","DE"')/Set`, or `Sales(Date='bt 2026-01-01,2026-03-31')/Set`
